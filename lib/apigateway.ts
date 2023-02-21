@@ -44,9 +44,9 @@ export class SwnApiGateway extends Construct {
         basketEndpoint.addMethod('GET'); // GET /basket
         basketEndpoint.addMethod('POST'); // POST /basket
 
-        const singleBasketEndpoint = basketEndpoint.addResource('{username}'); 
-        singleBasketEndpoint.addMethod('GET'); // GET /basket/{username}        
-        singleBasketEndpoint.addMethod('DELETE'); // DELETE /basket/{username}
+        const singleBasketEndpoint = basketEndpoint.addResource('{userName}'); 
+        singleBasketEndpoint.addMethod('GET'); // GET /basket/{userName}        
+        singleBasketEndpoint.addMethod('DELETE'); // DELETE /basket/{userName}
 
         const basketCheckoutEndpoint = basketEndpoint.addResource('checkout'); // /basket/checkout
         basketCheckoutEndpoint.addMethod('POST'); // POST /basket/checkout      
