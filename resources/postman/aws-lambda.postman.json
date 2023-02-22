@@ -235,7 +235,45 @@
 		},
 		{
 			"name": "order",
-			"item": []
+			"item": [
+				{
+					"name": "list all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{order_url}}",
+							"host": [
+								"{{order_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by username and orderdate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{order_url}}/jovijesc?orderDat2022-01-24Y11:01:07:869Z",
+							"host": [
+								"{{order_url}}"
+							],
+							"path": [
+								"jovijesc"
+							],
+							"query": [
+								{
+									"key": "orderDat2022-01-24Y11:01:07:869Z",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
