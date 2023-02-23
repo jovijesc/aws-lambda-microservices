@@ -5,28 +5,32 @@ import { ddbClient } from "./ddbClient";
 
 exports.handler = async function(event) {
     console.log("request:", JSON.stringify(event, undefined, 2));  
-    let body; 
   
-    // Attribute detail-type is getting from EventBridge request
-    const eventType = event['detail-type'];
-    if(eventType !== undefined) {
+    if(event.Records != null) {
+      // SQS Invocation - Pulling from Queue
+      await sqsInvocation(event);
+    } else if(event['detail-type'] !== undefined) {
       // Request is from EventBridge Invocation - async
       await eventBridgeInvocation(event);
-
     } else {
-
       // Request is from API Gateway Invocation -- return sync response
       return await apiGatewayInvocation(event);
-    }
+    } 
+  };
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: `Successfully finished operation: "${event.httpMethod}"`,
-        body: body
-      })
-    };
-   
+  const sqsInvocation = async (event) => {    
+    console.log(`sqsInvocation function. event : "${event}"`);
+    // Records related with batch-size
+   for (const record of event.Records) {
+      console.log('Record: %j', record);       
+      const checkoutEventRequest = JSON.parse(record.body);
+      await createOrder(checkoutEventRequest.detail)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => console.error(error));
+    }
+    
   };
 
   const eventBridgeInvocation = async (event) => {    
@@ -35,7 +39,6 @@ exports.handler = async function(event) {
   }
 
   const createOrder = async (basketCheckoutEvent) => {    
-
     try {
       console.log(`createOrder function. event : "${basketCheckoutEvent}"`);
   
