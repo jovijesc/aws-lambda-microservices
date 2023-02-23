@@ -172,7 +172,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"JohnDoe\",\r\n  \"items\": [\r\n    {\r\n      \"quantity\": 2,\r\n      \"color\": \"Red\",\r\n      \"price\": 999.99,\r\n      \"productId\": \"75bac825-ea2b-4916-8bfa-638f8fd42154\",\r\n      \"productName\": \"Smartphone\"\r\n    },\r\n    {\r\n      \"quantity\": 1,\r\n      \"color\": \"Blue\",\r\n      \"price\": 49.99,\r\n      \"productId\": \"32580fc1-8400-4c93-a926-e5fa4b750f05\",\r\n      \"productName\": \"Polo Shirt\"\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"userName\": \"jovijesc\",\r\n  \"items\": [\r\n    {\r\n      \"quantity\": 2,\r\n      \"color\": \"Red\",\r\n      \"price\": 999.99,\r\n      \"productId\": \"75bac825-ea2b-4916-8bfa-638f8fd42154\",\r\n      \"productName\": \"Smartphone\"\r\n    },\r\n    {\r\n      \"quantity\": 1,\r\n      \"color\": \"Blue\",\r\n      \"price\": 49.99,\r\n      \"productId\": \"32580fc1-8400-4c93-a926-e5fa4b750f05\",\r\n      \"productName\": \"Polo Shirt\"\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -195,7 +195,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"JohnDoe\",\r\n  \"totalPrice\": 0,\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"johndoe@gmail.com\",\r\n  \"address\": \"anywhere\",\r\n  \"cadInfo\": \"7897894566\",\r\n  \"paymentMethod\": 1\r\n}",
+							"raw": "{\r\n  \"userName\": \"jovijesc\",\r\n  \"totalPrice\": 0,\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"jovijesc@gmail.com\",\r\n  \"address\": \"anywhere\",\r\n  \"cadInfo\": \"7897894566\",\r\n  \"paymentMethod\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,9 +252,21 @@
 				},
 				{
 					"name": "order by username and orderdate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{order_url}}/jovijesc?orderDat2022-01-24Y11:01:07:869Z",
 							"host": [

@@ -1,6 +1,8 @@
+import { PutEventsCommand } from "@aws-sdk/client-eventbridge";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-const { GetItemCommand, ScanCommand, PutItemCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
-const { ddbClient } = require("../basket/ddbClient");
+import { GetItemCommand, ScanCommand, PutItemCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+import { ddbClient } from "./ddbClient";
+import { ebClient } from "./eventBridgeClient";
 
 exports.handler = async function(event) {
     console.log("request:", JSON.stringify(event, undefined, 2));
@@ -138,5 +140,73 @@ exports.handler = async function(event) {
 
   const checkoutBasket = async (event) => {
     console.log(`checkoutBasket function. event : "${event}"`);
+
+    // Expected request payload: { userName: jovijesc, attributes[firstName, lastName, email]}
+    const checkoutRequest = JSON.parse(event.body);
+    if(checkoutRequest == null || checkoutRequest.userName == null) {
+      throw new Error(`userName should exist in checkoutRequest: "${checkoutRequest}"`)
+    }
+
+    // Get basket with items
+    const basket = await getBasket(checkoutRequest.userName);
+    // Create an event json object with basket items - calculate totalPrice and prepare order create json data to send ordering ms
+    var checkoutPayload = prepareOrderPayload(checkoutRequest, basket);
+    // Publish an event to eventBridge
+    const publishedEvent = await publishCheckoutBasketEvent(checkoutPayload);
+    // Remove existing basket
+    await deleteBasket(checkoutRequest.userName);
+
+  }
+
+  const prepareOrderPayload = (checkoutRequest, basket) => {
+    console.log("prepareOrderPayload");
+
+    try {
+      if(basket == null || basket.items == null) {
+        throw new Error(`basket should exist in items: "${basket}"`)
+      }
+
+      // Calculate totalPrice
+      let totalPrice = 0;
+      basket.items.forEach(item => totalPrice = totalPrice * item.price);
+      checkoutRequest.totalPrice = totalPrice;
+      console.log(checkoutRequest);
+
+      // Copyall properties from basket into checkoutRequest
+      Object.assign(checkoutRequest, basket);
+      console.log("Success prepareOrderPayload, orderPayload:", checkoutRequest);
+      return checkoutRequest;
+
+    } catch(e) {
+      console.error(e);
+      throw e;
+    }
   }
   
+  const publishCheckoutBasketEvent = async (checkoutPayload) => {
+    console.log("publishCheckoutBasketEvent");
+
+    try {
+                
+      const params = {
+        Entries: [
+          {
+            Source: process.env.EVENT_SOURCE,
+            Detail: JSON.stringify(checkoutPayload),
+            DetailType: process.env.EVENT_DETAILTYPE,
+            Resources: [],
+            EventBusName: process.env.EVENT_BUSNAME
+          },
+        ],
+      };
+      
+      const data = await ebClient.send(new PutEventsCommand(params));
+
+      console.log("Success, event sent; requestID:", data);
+      return data;
+      
+    } catch(e) {
+      console.error(e);
+      throw e;
+    }
+  }
