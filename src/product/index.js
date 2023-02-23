@@ -174,8 +174,8 @@ const updateProduct = async (event) => {
   }
 }
 
-const getProductByCategory = async (event) => {
-  console.log(`getProductByCategory function. event : "${event}"`);
+const getProductsByCategory = async (event) => {
+  console.log(`getProductsByCategory function. event : "${event}"`);
 
   try {
     // GET product/{id}?category=Phone
